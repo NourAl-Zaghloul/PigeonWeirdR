@@ -40,9 +40,6 @@ pigeon_dozenal <- function(x, base_from = 10, base_to = 12){
   # Creating generic vector for 10 < baseX <= 62
   subdigits_62 <- c(0:9, LETTERS, letters)
 
-  # Creating the "10" for every base
-  OUT <- gsub(base_to, "10", OUT)
-
   # Substituting the notation for base_to
   if(base_to == 12){
     OUT <- gsub(10, "X", OUT)
@@ -53,6 +50,9 @@ pigeon_dozenal <- function(x, base_from = 10, base_to = 12){
       OUT <- gsub(i, subdigits_62[i+1], OUT)
     }
   }
+
+  # Creating the "10" for every base
+  OUT <- gsub(base_to, "10", OUT)
 
   # Collapsing the vector to a single value
   OUT <- paste0(OUT, collapse = "")
