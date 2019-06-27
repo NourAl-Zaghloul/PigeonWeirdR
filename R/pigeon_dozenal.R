@@ -8,7 +8,6 @@
 pigeon_dozenal <- function(x, base_from = 10, base_to = 12){
 
   # TODO: Vectorize the digit subs
-  # TODO: From any base to any base (using base 10 as an intermediary)
   # TODO: Fractions using MASS::fractions() as a step
   # TODO: Error catching (e.g. base_to = 1, unknown bases, not ready functions,
   #       not numbers given for bases, larger base than we have notation for...)
@@ -16,6 +15,44 @@ pigeon_dozenal <- function(x, base_from = 10, base_to = 12){
   # TODO: Dictionary for bases > 62
   # TODO: Allow user to add in custom dictionaries for to/from digitsubs
   # TODO: Weird base systems (balanced, negative, complex, etc.)
+
+
+  # Creating generic vector for 10 < baseX <= 62
+  subdigits_62 <- c(0:9, LETTERS, letters)
+
+  #### Base_from conversion ----
+
+  if(base_from != 10){
+
+    x_convert <- unlist(strsplit(as.character(x), ""))
+    x_temp <- 0
+
+    if( base_from > 10 & base_from <= 62){
+      ### Substitute + convert to decimal for bases > 10
+      if(base_from == 12){
+
+        x_convert <- gsub("X", 10, x_convert)
+        x_convert <- gsub("E", 11, x_convert)
+
+        } else if(base_from <= 62) {
+        for(k in seq(10, base_from) ){
+          x_convert <- gsub(subdigits_62[k+1], k, x_convert)
+        }
+      }
+    }
+
+    for(j in seq(length(x_convert) - 1)){
+
+      x_temp <- ((as.integer(x_convert[j]) + x_temp) * base_from)
+    }
+
+    x <- x_temp + as.integer(x_convert[j+1])
+
+  }
+
+
+  x <- as.integer(x)
+
 
   #### Actual Conversion processes (base_from = 10 to base_to positional) ----
   i <- 1
@@ -36,9 +73,6 @@ pigeon_dozenal <- function(x, base_from = 10, base_to = 12){
   }
 
   #### Subbing out base system numbers ----
-
-  # Creating generic vector for 10 < baseX <= 62
-  subdigits_62 <- c(0:9, LETTERS, letters)
 
   # Substituting the notation for base_to
   if(base_to == 12){
