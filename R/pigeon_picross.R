@@ -7,6 +7,8 @@ pigeon_picrossCreate <- function(x = 10, y = 10, seed = 112211, locations = .5){
 }
 
 pigeon_picrossSolve <- function(width_values, height_values){
+  #TODO: setup so that it runs all the processes by vector and not all the vectors by process
+  #TODO: setup so that zero-created edges count as a smaller length
 
 }
 
@@ -16,17 +18,17 @@ pigeon_picrossSolve <- function(width_values, height_values){
 # nonogram_width <- list(c(3,1),5,c(2,2),1,3)
 # nonogram_height <- list(3, 3, c(2,2),c(2,1),c(3,1))
 # More Difficult Parameters
-nonogram_width <- list(c(1,1),1,c(1,2),1,3)
-nonogram_height <- list(c(1,1,1),1,c(1,1),4,0)
+nonogram_width <- list(3, c(1,2), 4, c(1,1), c(2,1))
+nonogram_height <- list(0, 4, c(1,1,1), 3, 5)
 
 # Creates empty nonogram matrix
 nonogram <- matrix(nrow = length(nonogram_width),
                    ncol = length(nonogram_height))
 
-#### Solves the complete Rows ----
+#### 1. Solves the complete Rows [X] ----
 # TODO: Remove overlap between width & height complete rows
 for(i in seq(length(nonogram_width))){
-  if((sum(nonogram_width[[i]]) + length(nonogram_width[[i]]) - 1) == length(nonogram_width)){
+  if(NA %in% nonogram[, i] && (sum(nonogram_width[[i]]) + length(nonogram_width[[i]]) - 1) == length(nonogram_width)){
     # Creates the completed vector
     answer <- NULL
     for(j in seq(length(nonogram_width[[i]]))){
@@ -41,7 +43,7 @@ for(i in seq(length(nonogram_width))){
 }
 
 for(i in seq(length(nonogram_height))){
-  if((sum(nonogram_height[[i]]) + length(nonogram_height[[i]]) - 1) == length(nonogram_height)){
+  if(NA %in% nonogram[i, ] && (sum(nonogram_height[[i]]) + length(nonogram_height[[i]]) - 1) == length(nonogram_height)){
     # Creates the completed vector
     answer <- NULL
     for(j in seq(length(nonogram_height[[i]]))){
@@ -55,21 +57,72 @@ for(i in seq(length(nonogram_height))){
   }
 }
 
-#### Completes teriary-complete vectors ----
-#. Vectors that were completed as a by-product between the true complete vectors
-for(i in seq(ncol(nonogram))){
-  if(NA %in% nonogram[,i] & sum(nonogram[,i], na.rm = TRUE) == sum(nonogram_width[[i]])){
-    nonogram[,i][is.na(nonogram[,i])] <- 0
+
+#### 2. Adds necessary locations [X] ----
+#. e.g. matrix = 5x5 and clue = "4", == c(NA, 1,1,1, NA)
+
+for(i in seq(length(nonogram_width))){
+  # Determines the value clues need to exceed to have necessary locations in the answer
+  pic_diff <- length(nonogram[, i]) - (sum(nonogram_width[[i]]) + length(nonogram_width[[i]]) - 1)
+  # Checks to see if the vector is unsolved && a clue exceeds the pic_diff
+  if(NA %in% nonogram[, i] && pic_diff < max(nonogram_width[[i]])){
+    pic_vector <- nonogram[, i]
+    # Creates the offsetting for the necessary locations
+    pic_base <- 1
+    #Creates the nec. locations for each clue if applicable
+    for(j in seq(length(nonogram_width[[i]]))){
+      if(nonogram_width[[i]][j] > pic_diff){
+        pic_vector[(pic_base+pic_diff):nonogram_width[[i]][j]] <- 1
+      }
+      pic_base <- pic_base + nonogram_width[[i]][j] + 1
+    }
+    nonogram[, i] <- pic_vector
   }
 }
 
-for(i in seq(nrow(nonogram))){
-  if(NA %in% nonogram[i,] & sum(nonogram[i,], na.rm = TRUE) == sum(nonogram_height[[i]])){
-    nonogram[i,][is.na(nonogram[i,])] <- 0
+for(i in seq(length(nonogram_height))){
+  # Determines the value clues need to exceed to have necessary locations in the answer
+  pic_diff <- length(nonogram[i, ]) - (sum(nonogram_height[[i]]) + length(nonogram_height[[i]]) - 1)
+  # Checks to see if the vector is unsolved && a clue exceeds the pic_diff
+  if(NA %in% nonogram[i, ] && pic_diff < max(nonogram_height[[i]])){
+    pic_vector <- nonogram[i, ]
+    # Creates the offsetting for the necessary locations
+    pic_base <- 1
+    #Creates the nec. locations for each clue if applicable
+    for(j in seq(length(nonogram_height[[i]]))){
+      if(nonogram_height[[i]][j] > pic_diff){
+        pic_vector[(pic_base+pic_diff):nonogram_height[[i]][j]] <- 1
+      }
+      pic_base <- pic_base + nonogram_height[[i]][j] + 1
+    }
+    nonogram[i, ] <- pic_vector
   }
 }
 
-#### Solves single in-between single value vectors
+
+#### 3. Solves edge-cases [ ] ----
+#. e.g. c(0,0,NA,NA,NA) for clue "3" | c(NA,0,1,NA,NA) for clue "3" | c(1, NA, NA, NA, NA) for clue "3"
+#TODO: this.
+# .... First do the actual edges c(1, NA, NA, NA, NA)
+# .... Then the edge-adjacent c(NA, 1, NA, NA, NA) for clue > 2
+
+for(i in seq(length(nonogram_width))){
+  pic_start <- nonogram_width[[i]][1]
+  pic_end <- nonogram_width[[i]][length(nonogram_width[[i]])]
+  if(NA %in% nonogram[, i] ){ # && location of "1" in vector_start > pic_start
+    # Remember to add in the zero at the end!
+  } else if(NA %in% nonogram[, i] ){ # && length - location of "1" in vector_end > pic_end
+    # Remember to add in the zero at the end (beginning)!
+    }
+
+
+}
+
+#### 4. 0's impossible locations [ ] ----
+#. values too far away, not enough space, etc.
+# TODO: this.
+
+#### 5. Solves single in-between (single value vectors only currently) [~] ----
 #. e.g. for the clue "3" and vector c(1,NA,1,NA,NA) <- c(1,1,1,0,0)
 for(i in seq(ncol(nonogram))){
   TheString <- stringr::str_replace_na(nonogram[,i])
@@ -78,7 +131,7 @@ for(i in seq(ncol(nonogram))){
     FillLocation <- grep(1, nonogram[,i])
     for(j in FillLocation[1]:FillLocation[2]){
       nonogram[j,i] <- 1
-      }
+    }
   }
 }
 
@@ -93,19 +146,22 @@ for(i in seq(nrow(nonogram))){
   }
 }
 
-##3# Solves single edge-cases ----
-#. e.g. c(0,0,NA,NA,NA) for clue "3" | c(NA,0,1,NA,NA) for clue "3"
-#TODO: this.
 
-#### 0's impossible locations ----
-#. values too far away, not enough space, etc.
-# TODO: this.
+#### X-1. Completes teriary-complete vectors [ ] ----
+#. Vectors that were completed as a by-product between the true complete vectors
+for(i in seq(ncol(nonogram))){
+  if(NA %in% nonogram[,i] & sum(nonogram[,i], na.rm = TRUE) == sum(nonogram_width[[i]])){
+    nonogram[,i][is.na(nonogram[,i])] <- 0
+  }
+}
 
-#### Adds in necessary locations (but not completed rows) ----
-#. e.g. matrix = 5x5 and clue = "4", == c(NA, 1,1,1, NA)
-# TODO: this.
+for(i in seq(nrow(nonogram))){
+  if(NA %in% nonogram[i,] & sum(nonogram[i,], na.rm = TRUE) == sum(nonogram_height[[i]])){
+    nonogram[i,][is.na(nonogram[i,])] <- 0
+  }
+}
 
-#### runs through permutations of possible solutions ----
+#### X. Runs through permutations of possible solutions [ ] ----
 #. Bogosolve with the leftovers basically
 # TODO: This.
 
