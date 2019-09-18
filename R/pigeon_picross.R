@@ -121,7 +121,7 @@ for(i in seq(length(nonogram_width))){
     answertemp[(stringr::str_locate(TheString,"1*$")[1,2] - length(nonogram[, i]) + 1):(pic_end+1)] <- c(rep(1, length((stringr::str_locate(TheString,"1*$")[1,2] - length(nonogram[, i]) + 1):(pic_end))),0)
     nonogram[, i] <- rev(answertemp[seq(length(nonogram[, i]))])
   }
-  rm(pic_start, pic_end, answertemp)
+  rm(pic_start, pic_end, answertemp, TheString)
 }
 
 for(i in seq(length(nonogram_height))){
@@ -140,7 +140,7 @@ for(i in seq(length(nonogram_height))){
     answertemp[(stringr::str_locate(TheString,"1*$")[1,2] - length(nonogram[i, ]) + 1):(pic_end+1)] <- c(rep(1, length((stringr::str_locate(TheString,"1*$")[1,2] - length(nonogram[i, ]) + 1):(pic_end))),0)
     nonogram[i, ] <- rev(answertemp[seq(length(nonogram[i, ]))])
   }
-  rm(pic_start, pic_end, answertemp)
+  rm(pic_start, pic_end, answertemp, TheString)
 }
 
 
