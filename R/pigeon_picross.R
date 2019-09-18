@@ -100,23 +100,49 @@ for(i in seq(length(nonogram_height))){
 }
 
 
-#### 3. Solves edge-cases [ ] ----
+#### 3. Solves edge-cases [ ~] ----
 #. e.g. c(0,0,NA,NA,NA) for clue "3" | c(NA,0,1,NA,NA) for clue "3" | c(1, NA, NA, NA, NA) for clue "3"
-#TODO: this.
-# .... First do the actual edges c(1, NA, NA, NA, NA)
-# .... Then the edge-adjacent c(NA, 1, NA, NA, NA) for clue > 2
+
+# TODO: count end 0's as edges as well
 
 for(i in seq(length(nonogram_width))){
+  # Creates the vector string and its reverse
+  TheString <- stringr::str_replace_na(nonogram[,i], replacement = "_")
+  TheString <- stringr::str_c(TheString, collapse = "")
   pic_start <- nonogram_width[[i]][1]
   pic_end <- nonogram_width[[i]][length(nonogram_width[[i]])]
-  if(NA %in% nonogram[, i] ){ # && location of "1" in vector_start > pic_start
-    # Remember to add in the zero at the end!
-  } else if(NA %in% nonogram[, i] ){ # && length - location of "1" in vector_end > pic_end
-    # Remember to add in the zero at the end (beginning)!
-    }
 
-
+  if(all(c(NA,1) %in% nonogram[, i]) && pic_start > stringr::str_locate(TheString, "1")[1,1]){
+    answertemp <- nonogram[, i]
+    answertemp[stringr::str_locate(TheString, "1")[1,1]:(pic_start+1)] <- c(rep(1, length(stringr::str_locate(TheString, "1")[1,1]:pic_start)),0)
+    nonogram[, i] <- answertemp[seq(length(nonogram[, i]))]
+  } else if(all(c(NA,1) %in% nonogram[, i]) && pic_end > (stringr::str_locate(TheString,"1*$")[1,2] - length(nonogram[, i]) + 1)){
+    answertemp <- rev(nonogram[, i])
+    answertemp[(stringr::str_locate(TheString,"1*$")[1,2] - length(nonogram[, i]) + 1):(pic_end+1)] <- c(rep(1, length((stringr::str_locate(TheString,"1*$")[1,2] - length(nonogram[, i]) + 1):(pic_end))),0)
+    nonogram[, i] <- rev(answertemp[seq(length(nonogram[, i]))])
+  }
+  rm(pic_start, pic_end, answertemp)
 }
+
+for(i in seq(length(nonogram_height))){
+  # Creates the vector string and its reverse
+  TheString <- stringr::str_replace_na(nonogram[,i], replacement = "_")
+  TheString <- stringr::str_c(TheString, collapse = "")
+  pic_start <- nonogram_height[[i]][1]
+  pic_end <- nonogram_height[[i]][length(nonogram_height[[i]])]
+
+  if(all(c(NA,1) %in% nonogram[i, ]) && pic_start > stringr::str_locate(TheString, "1")[1,1]){
+    answertemp <- nonogram[i, ]
+    answertemp[stringr::str_locate(TheString, "1")[1,1]:(pic_start+1)] <- c(rep(1, length(stringr::str_locate(TheString, "1")[1,1]:pic_start)),0)
+    nonogram[i, ] <- answertemp[seq(length(nonogram[i, ]))]
+  } else if(all(c(NA,1) %in% nonogram[i, ]) && pic_end > (stringr::str_locate(TheString,"1*$")[1,2] - length(nonogram[i, ]) + 1)){
+    answertemp <- rev(nonogram[i, ])
+    answertemp[(stringr::str_locate(TheString,"1*$")[1,2] - length(nonogram[i, ]) + 1):(pic_end+1)] <- c(rep(1, length((stringr::str_locate(TheString,"1*$")[1,2] - length(nonogram[i, ]) + 1):(pic_end))),0)
+    nonogram[i, ] <- rev(answertemp[seq(length(nonogram[i, ]))])
+  }
+  rm(pic_start, pic_end, answertemp)
+}
+
 
 #### 4. 0's impossible locations [ ] ----
 #. values too far away, not enough space, etc.
@@ -127,7 +153,7 @@ for(i in seq(length(nonogram_width))){
 for(i in seq(ncol(nonogram))){
   TheString <- stringr::str_replace_na(nonogram[,i])
   TheString <- stringr::str_c(TheString, collapse = "")
-  if(NA %in% nonogram[,i] & length(nonogram_width[[i]]) == 1 & grepl("1[NA]+1",TheString)){
+  if(NA %in% nonogram[,i] && length(nonogram_width[[i]]) == 1 & grepl("1(NA)+1",TheString)){
     FillLocation <- grep(1, nonogram[,i])
     for(j in FillLocation[1]:FillLocation[2]){
       nonogram[j,i] <- 1
@@ -138,7 +164,7 @@ for(i in seq(ncol(nonogram))){
 for(i in seq(nrow(nonogram))){
   TheString <- stringr::str_replace_na(nonogram[i,])
   TheString <- stringr::str_c(TheString, collapse = "")
-  if(NA %in% nonogram[,i] & length(nonogram_height[[i]]) == 1 & grepl("1[NA]+1",TheString)){
+  if(NA %in% nonogram[,i] && length(nonogram_height[[i]]) == 1 & grepl("1(NA)+1",TheString)){
     FillLocation <- grep(1, nonogram[i,])
     for(j in FillLocation[1]:FillLocation[2]){
       nonogram[i,j] <- 1
@@ -165,3 +191,8 @@ for(i in seq(nrow(nonogram))){
 #. Bogosolve with the leftovers basically
 # TODO: This.
 
+
+
+#### Z. Miscellaneous Code Bits & Ideas ----
+traveller <- "0011NA"
+stringr::str_count(traveller, "0|(NA)")
