@@ -100,7 +100,7 @@ for(i in seq(length(nonogram_height))){
 }
 
 
-#### 3. Solves edge-cases [ ~] ----
+#### 3. Solves edge-cases [~] ----
 #. e.g. c(0,0,NA,NA,NA) for clue "3" | c(NA,0,1,NA,NA) for clue "3" | c(1, NA, NA, NA, NA) for clue "3"
 
 # TODO: count end 0's as edges as well
@@ -150,6 +150,7 @@ for(i in seq(length(nonogram_height))){
 
 #### 5. Solves single in-between (single value vectors only currently) [~] ----
 #. e.g. for the clue "3" and vector c(1,NA,1,NA,NA) <- c(1,1,1,0,0)
+# TODO: for 0-edge cases as well
 for(i in seq(ncol(nonogram))){
   TheString <- stringr::str_replace_na(nonogram[,i])
   TheString <- stringr::str_c(TheString, collapse = "")
@@ -173,7 +174,7 @@ for(i in seq(nrow(nonogram))){
 }
 
 
-#### X-1. Completes teriary-complete vectors [ ] ----
+#### X-1. Completes teriary-complete vectors [X] ----
 #. Vectors that were completed as a by-product between the true complete vectors
 for(i in seq(ncol(nonogram))){
   if(NA %in% nonogram[,i] & sum(nonogram[,i], na.rm = TRUE) == sum(nonogram_width[[i]])){
