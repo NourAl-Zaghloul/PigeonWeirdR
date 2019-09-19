@@ -18,8 +18,12 @@ pigeon_picrossSolve <- function(width_values, height_values){
 # nonogram_width <- list(c(3,1),5,c(2,2),1,3)
 # nonogram_height <- list(3, 3, c(2,2),c(2,1),c(3,1))
 # More Difficult Parameters
-nonogram_width <- list(3, c(1,2), 4, c(1,1), c(2,1))
-nonogram_height <- list(0, 4, c(1,1,1), 3, 5)
+nonogram_width <- list(1,6,c(8,2),c(8,2),c(2,8),
+                       c(2,2,5),c(2,6,2),c(1,9),c(2,3,2,1),c(3,2,1,2),
+                       c(4,2),c(7,4),c(2,11),c(1,7),c(1,1))
+nonogram_height <- list(7,8,c(3,3),c(2,3),c(2,2),
+                        c(3,3,2),c(8,3),c(7,2),c(4,2,2),c(8,2),
+                        c(9,2),c(2,4,3),c(2,3,3,4),c(3,3,4),c(1,1,2))
 
 # Creates empty nonogram matrix
 nonogram <- matrix(nrow = length(nonogram_width),
@@ -194,6 +198,7 @@ for(i in seq(nrow(nonogram))){
 
 
 
+#### Y. Visual Representation [ ] ----
 #### Z. Miscellaneous Code Bits & Ideas ----
 traveller <- "0011NA"
 stringr::str_count(traveller, "0|(NA)")
