@@ -1,5 +1,3 @@
-#' Converts base10 integers to base12
-#' Currently only works with base_from = 10 & (base_to = 12 or base_to <= 10)
 #' No fractions yet
 #'
 #' @param x
@@ -13,6 +11,7 @@ pigeon_dozenal <- function(x, base_from = 10, base_to = 12){
   #       not numbers given for bases, larger base than we have notation for...)
   # TODO: Make it pipeable
   # TODO: Dictionary for bases > 62
+  #         + Warning for bases > 62
   # TODO: Allow user to add in custom dictionaries for to/from digitsubs
   # TODO: Weird base systems (balanced, negative, complex, etc.)
 
