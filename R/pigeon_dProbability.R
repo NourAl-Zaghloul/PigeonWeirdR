@@ -1,10 +1,12 @@
 pigeon_dProbability <- function(x, y = NA, operation = NA){
-  library(tidyverse)
+  # library(tidyverse)
 
-  # TODO: Operations
   # TODO: Arguments
   # TODO: assume "dN" == "1dN"
+  # TODO: Flat # instead of die ( x < 6)
+  # TODO: Be more DRY and better organized
   # TODO: Custom Dice
+  # TODO: Explicit function calls
 
   #### Dice X Information ----
   dicetype_x <- stringr::str_extract(x, "(?<=[:digit:])[:alpha:]+")
@@ -53,18 +55,78 @@ pigeon_dProbability <- function(x, y = NA, operation = NA){
     #### Operation ----
     if(!is.na(operation)){
       # ==, <, >, >=, <=
+      if(operation == "==" || operation == "="){
+
+        dicetable_xy_sum <- dplyr::full_join(dicetable_x_sum, dicetable_y_sum,) %>%
+          replace(., is.na(.), 0) %>%
+          mutate(endprobability = y_percentage * x_percentage / 100)
+        OUT <- sum(dicetable_xy_sum$endprobability, na.rm = TRUE)
+
+      } else if(operation == ">"){
+
+        dicetable_xy_sum <- dplyr::full_join(dicetable_x_sum, dicetable_y_sum,) %>%
+          replace(., is.na(.), 0)
+        for(i in seq(nrow(dicetable_xy_sum))){
+          dicetable_xy_sum$endprobability[i] <-
+            sum(dicetable_xy_sum$x_percentage[(i+1):nrow(dicetable_xy_sum)]) *
+            dicetable_xy_sum$y_percentage[i]
+        }
+        OUT <- sum(dicetable_xy_sum$endprobability, na.rm = TRUE)/100
+
+      } else if(operation == "<"){
+
+        dicetable_xy_sum <- dplyr::full_join(dicetable_x_sum, dicetable_y_sum,) %>%
+          replace(., is.na(.), 0)
+        for(i in seq(nrow(dicetable_xy_sum))){
+          dicetable_xy_sum$endprobability[i] <-
+            sum(dicetable_xy_sum$x_percentage[i:nrow(dicetable_xy_sum)]) *
+            dicetable_xy_sum$y_percentage[i]
+        }
+        # Just 1 - the ">=" operation
+        OUT <- 100 - sum(dicetable_xy_sum$endprobability, na.rm = TRUE)/100
+
+      } else if(operation == ">="){
+
+        dicetable_xy_sum <- dplyr::full_join(dicetable_x_sum, dicetable_y_sum,) %>%
+          replace(., is.na(.), 0)
+        for(i in seq(nrow(dicetable_xy_sum))){
+          dicetable_xy_sum$endprobability[i] <-
+            sum(dicetable_xy_sum$x_percentage[i:nrow(dicetable_xy_sum)]) *
+            dicetable_xy_sum$y_percentage[i]
+        }
+        OUT <- sum(dicetable_xy_sum$endprobability, na.rm = TRUE)/100
+
+      } else if(operation == "<="){
+
+        dicetable_xy_sum <- dplyr::full_join(dicetable_x_sum, dicetable_y_sum,) %>%
+          replace(., is.na(.), 0)
+        for(i in seq(nrow(dicetable_xy_sum))){
+          dicetable_xy_sum$endprobability[i] <-
+            sum(dicetable_xy_sum$x_percentage[(i+1):nrow(dicetable_xy_sum)]) *
+            dicetable_xy_sum$y_percentage[i]
+        }
+        # Just 1 - the ">" operation
+        OUT <- 100 - sum(dicetable_xy_sum$endprobability, na.rm = TRUE)/100
+
+      } else if(operation == "!="){
+
+        dicetable_xy_sum <- dplyr::full_join(dicetable_x_sum, dicetable_y_sum,) %>%
+          replace(., is.na(.), 0) %>%
+          mutate(endprobability = (100 - y_percentage) * x_percentage / 100)
+        OUT <- sum(dicetable_xy_sum$endprobability, na.rm = TRUE)
+      }
 
     } else {
 
-      # Assumes x > y
+      # Assumes x == y
       dicetable_xy_sum <- dplyr::full_join(dicetable_x_sum, dicetable_y_sum,) %>%
-        replace(., is.na(.), 0)
-      for(i in seq(nrow(dicetable_xy_sum))){
-        dicetable_xy_sum$x_over[i] <- sum(dicetable_xy_sum$x_percentage[(i+1):nrow(dicetable_xy_sum)])
-
-      }
+        replace(., is.na(.), 0) %>%
+        mutate(endprobability = y_percentage * x_percentage / 100)
+      OUT <- sum(dicetable_xy_sum$endprobability, na.rm = TRUE)
 
     }
+
+    return(abs(OUT))
 
   } else {
     return(dicetable_x_sum)
