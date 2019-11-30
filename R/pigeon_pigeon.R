@@ -1,8 +1,16 @@
-pigeon_pigeon <- function(){
+pigeon_pigeon <- function(x = 1, type = "any"){
   pigeon_species <- readRDS("pigeon_species.RDS")
   pigeon_breeds <- readRDS("pigeon_breeds.RDS")
 
-  return(pigeon_species$`Common name`[trunc(runif(1,min = 1, max = 100))])
+  if(type == "any"){
+    pigeon_data <- c(pigeon_breeds, pigeon_species$`Common name`)
+  } else if(type == "breeds"){
+    pigeon_data <- pigeon_breeds
+  } else if(type == "species"){
+    pigeon_data <- pigeon_species$`Common name`
+  }
+
+  return(pigeon_data[trunc(runif(x,min = 1, max = length(pigeon_data)+.999))])
 
 }
 
