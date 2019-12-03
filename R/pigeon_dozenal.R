@@ -4,6 +4,13 @@
 #' @param base_from
 #' @param base_to
 pigeon_dozenal <- function(x, base_from = 10, base_to = 12){
+  if(!is.numeric(base_from) || !is.numeric(base_to)){
+    stop("Bases must be in numeric form (in base 10)", call. = FALSE)
+  } else if(base_from < 2 || base_to < 2){
+    stop("Cannot convert bases < 2", call. = FALSE)
+  } else if(base_to > 62 || base_from > 62){
+    stop("Cannot convert bases > 62", call. = FALSE)
+  }
 
   # TODO: Vectorize the digit subs
   # TODO: Fractions using MASS::fractions() as a step

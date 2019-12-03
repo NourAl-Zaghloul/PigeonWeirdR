@@ -1,4 +1,4 @@
-pigeon_pigeon <- function(x = 1, type = "any"){
+pigeon_pigeon <- function(n = 1, type = "any"){
   pigeon_species <- readRDS("pigeon_species.RDS")
   pigeon_breeds <- readRDS("pigeon_breeds.RDS")
 
@@ -10,7 +10,7 @@ pigeon_pigeon <- function(x = 1, type = "any"){
     pigeon_data <- pigeon_species$`Common name`
   }
 
-  return(pigeon_data[trunc(runif(x,min = 1, max = length(pigeon_data)+.999))])
+  return(sample(pigeon_data, size = n))
 
 }
 
