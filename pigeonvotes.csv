@@ -1,0 +1,27 @@
+voterID,choiceFirst,choiceSecond,choiceThird,choiceFourth,choiceFifth,choiceSixth,choiceSeventh,choiceEighth
+A,mourning,rock,fruit,Namaqua,White-throated quail,Blue ground,Catalan Head and Neck Tumbler,Flores green
+B,mourning,rock,fruit,Namaqua,White-throated quail,Blue ground,Catalan Head and Neck Tumbler,Flores green
+C,mourning,rock,Namaqua,White-throated quail,Blue ground,Catalan Head and Neck Tumbler,Flores green,fruit
+D,mourning,rock,Namaqua,White-throated quail,Blue ground,Catalan Head and Neck Tumbler,Flores green,fruit
+E,mourning,fruit,Namaqua,White-throated quail,Blue ground,Catalan Head and Neck Tumbler,Flores green,rock
+F,mourning,fruit,Namaqua,White-throated quail,Blue ground,Catalan Head and Neck Tumbler,Flores green,rock
+G,mourning,White-throated quail,Namaqua,Blue ground,Catalan Head and Neck Tumbler,Flores green,fruit,rock
+H,mourning,White-throated quail,Namaqua,Blue ground,Catalan Head and Neck Tumbler,Flores green,fruit,rock
+I,rock,Catalan Head and Neck Tumbler,mourning,Blue ground,Namaqua,fruit,White-throated quail,Flores green
+J,rock,Catalan Head and Neck Tumbler,mourning,Blue ground,Namaqua,fruit,White-throated quail,Flores green
+K,rock,Namaqua,mourning,Blue ground,Catalan Head and Neck Tumbler,fruit,White-throated quail,Flores green
+L,rock,Namaqua,mourning,Blue ground,Catalan Head and Neck Tumbler,fruit,White-throated quail,Flores green
+M,fruit,rock,mourning,White-throated quail,Namaqua,Blue ground,Catalan Head and Neck Tumbler,Flores green
+N,fruit,rock,mourning,White-throated quail,Namaqua,Blue ground,Catalan Head and Neck Tumbler,Flores green
+O,fruit,rock,Namaqua,mourning,White-throated quail,Blue ground,Catalan Head and Neck Tumbler,Flores green
+P,fruit,rock,Namaqua,mourning,White-throated quail,Blue ground,Catalan Head and Neck Tumbler,Flores green
+Q,Blue ground,Namaqua,fruit,mourning,rock,Catalan Head and Neck Tumbler,White-throated quail,Flores green
+R,Blue ground,Namaqua,fruit,mourning,rock,Catalan Head and Neck Tumbler,White-throated quail,Flores green
+S,Flores green,Blue ground,White-throated quail,mourning,rock,Namaqua,Catalan Head and Neck Tumbler,fruit
+T,Flores green,Blue ground,White-throated quail,mourning,rock,Namaqua,Catalan Head and Neck Tumbler,fruit
+U,Namaqua,Blue ground,fruit,mourning,rock,Catalan Head and Neck Tumbler,White-throated quail,Flores green
+V,Namaqua,rock,fruit,mourning,Blue ground,Catalan Head and Neck Tumbler,White-throated quail,Flores green
+W,Namaqua,mourning,Catalan Head and Neck Tumbler,White-throated quail,Blue ground,Flores green,fruit,rock
+X,Namaqua,mourning,Catalan Head and Neck Tumbler,White-throated quail,Blue ground,Flores green,fruit,rock
+Y,White-throated quail,Blue ground,Flores green,Namaqua,mourning,Catalan Head and Neck Tumbler,fruit,rock
+Z,Catalan Head and Neck Tumbler,rock,mourning,fruit,Namaqua,White-throated quail,Blue ground,Flores green
