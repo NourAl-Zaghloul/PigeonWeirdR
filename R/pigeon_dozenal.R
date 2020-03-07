@@ -16,15 +16,16 @@ pigeon_dozenal <- function(x, base_from = 10, base_to = 12){
   # TODO: Fractions using MASS::fractions() as a step
   # TODO: Error catching (e.g. base_to = 1, unknown bases, not ready functions,
   #       not numbers given for bases, larger base than we have notation for...)
-  # TODO: Make it pipeable
-  # TODO: Dictionary for bases > 62
-  #         + Warning for bases > 62
   # TODO: Allow user to add in custom dictionaries for to/from digitsubs
   # TODO: Weird base systems (balanced, negative, complex, etc.)
 
 
   # Creating generic vector for 10 < baseX <= 62
+  symbols_base <- c("`", "~", "!", "@", "#", "$", "%", "^", "&", "*", "\\(", "\\)",
+                    "-", "_", "+", "=", "\\{", "\\[", "\\]", "\\}", "\\\\", "|", ":", ";",
+                    "\"", "'", "<", ",", ">", ".", "?", "/")
   subdigits_62 <- c(0:9, LETTERS, letters)
+  # subdigits_94 <- c(0:9, LETTERS, letters, symbols_base)
 
   #### Base_from conversion ----
 
@@ -41,8 +42,8 @@ pigeon_dozenal <- function(x, base_from = 10, base_to = 12){
         x_convert <- gsub("E", 11, x_convert)
 
         } else if(base_from <= 62) {
-        for(k in seq(10, base_from) ){
-          x_convert <- gsub(subdigits_62[k+1], k, x_convert)
+        for(k in seq(11, base_from) ){
+          x_convert <- gsub(subdigits_62[k], k, x_convert)
         }
       }
     }
@@ -57,45 +58,51 @@ pigeon_dozenal <- function(x, base_from = 10, base_to = 12){
   }
 
 
-  x <- as.integer(x)
+  x <- ifelse(x > 2147483647, as.numeric(x), as.integer(x))
+
 
 
   #### Actual Conversion processes (base_from = 10 to base_to positional) ----
-  i <- 1
-  OUT <- c()
-  quotient <- x
-  if(quotient > base_to){
-
-    while(quotient > base_to){
-      OUT[i] <- quotient %% base_to
-      i <- i + 1
-      quotient <- trunc(quotient / base_to)
-    }
-    OUT[i] <- trunc(quotient)
-    OUT <- rev(OUT)
-
+  if(base_to == 10){
+    OUT <- x
   } else {
-    OUT <- quotient
-  }
+    i <- 1
+    OUT <- c()
+    quotient <- x
+    if(quotient > base_to){
 
-  #### Subbing out base system numbers ----
+      while(quotient > base_to){
+        OUT[i] <- quotient %% base_to
+        i <- i + 1
+        quotient <- trunc(quotient / base_to)
+      }
+      OUT[i] <- trunc(quotient)
+      OUT <- rev(OUT)
 
-  # Substituting the notation for base_to
-  if(base_to == 12){
-    OUT <- gsub(10, "X", OUT)
-    OUT <- gsub(11, "E", OUT)
-
-  } else if(base_to > 10 & base_to <= 62) {
-    for(i in seq(base_from, base_to - 1) ){
-      OUT <- gsub(i, subdigits_62[i+1], OUT)
+    } else {
+      OUT <- quotient
     }
+
+    #### Subbing out base system numbers ----
+
+    # Substituting the notation for base_to
+    if(base_to == 12){
+      OUT <- gsub(10, "X", OUT)
+      OUT <- gsub(11, "E", OUT)
+
+    } else if(base_to > 10 & base_to <= 62) {
+      for(i in seq(base_from, base_to - 1) ){
+        OUT <- gsub(i, subdigits_62[i+1], OUT)
+      }
+    }
+
+    # Creating the "10" for every base
+    OUT <- gsub(base_to, "10", OUT)
+
+    # Collapsing the vector to a single value
+    OUT <- paste0(OUT, collapse = "")
   }
 
-  # Creating the "10" for every base
-  OUT <- gsub(base_to, "10", OUT)
-
-  # Collapsing the vector to a single value
-  OUT <- paste0(OUT, collapse = "")
 
   #### Return ----
   return(OUT)
